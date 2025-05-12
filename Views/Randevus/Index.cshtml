@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Randevu>
+<div class="container mt-4">
+    <h2>Randevu Listesi</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hasta</th>
+                <th>Doktor</th>
+                <th>Tarih</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Hasta.Ad</td>
+                    <td>@item.Doktor.Ad</td>
+                    <td>@item.Tarih.ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
