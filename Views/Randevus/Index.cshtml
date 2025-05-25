@@ -1,23 +1,60 @@
-﻿@model IEnumerable<Randevu>
-<div class="container mt-4">
-    <h2>Randevu Listesi</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Hasta</th>
-                <th>Doktor</th>
-                <th>Tarih</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
+﻿@model IEnumerable<HastaneAppv4.Models.Randevu>
+@{
+    var doktorlar = ViewBag.Doktorlar as List<HastaneAppv4.Models.Doktor>;
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">
+        <i class="far fa-calendar-alt me-2"></i> Randevu Listesi
+    </h2>
+
+    <div class="mb-4">
+        <h4>Doktorlar</h4>
+        <div class="row g-3">
+            @if (doktorlar != null)
             {
-                <tr>
-                    <td>@item.Hasta.Ad</td>
-                    <td>@item.Doktor.Ad</td>
-                    <td>@item.Tarih.ToString("dd.MM.yyyy HH:mm")</td>
-                </tr>
+                foreach (var doktor in doktorlar)
+                {
+                    <div class="col-md-4">
+                        <div class="card p-3">
+                            <h5>@doktor.Ad @doktor.Soyad</h5>
+                            <p><span class="badge bg-info">@doktor.Brans</span></p>
+                          <a href="@Url.Action("Create", "Randevus", new { doktorId = doktor.Id })" class="btn btn-outline-primary btn-sm">
+                                Randevu Al
+                          </a>
+
+                            <a href="@Url.Action("Details", "Doktors", new { id = doktor.Id })" class="btn btn-outline-secondary btn-sm ms-2">
+                                Detay
+                            </a>
+                        </div>
+                    </div>
+                }
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
+
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title mb-2">@item.Hasta.Ad @item.Hasta.Soyad</h5>
+                            <p class="mb-1"><strong>Doktor:</strong> @item.Doktor.Ad @item.Doktor.Soyad</p>
+                            <p class="mb-1"><strong>Tarih:</strong> @item.Tarih.ToString("dd.MM.yyyy")</p>
+                            <p class="mb-1"><strong>Saat:</strong> @item.Saat?.ToString(@"hh\:mm")</p>
+                        </div>
+                        <div class="d-flex flex-column gap-2">
+                            <a href="@Url.Action("Details", "Randevus", new { id = item.Id })" class="btn btn-outline-primary btn-sm">Detay</a>
+                            <form asp-action="Delete" asp-controller="Randevus" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Randevu iptal edilsin mi?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">İptal Et</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

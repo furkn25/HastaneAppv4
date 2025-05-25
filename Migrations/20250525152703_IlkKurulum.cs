@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HastaneAppv4.Data.Migrations
+namespace HastaneAppv4.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class IlkKurulum : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,13 +73,19 @@ namespace HastaneAppv4.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Ad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Soyad = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Soyad = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Brans = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    KlinikId = table.Column<int>(type: "int", nullable: true)
+                    KlinikId = table.Column<int>(type: "int", nullable: true),
+                    DoktorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doktorlar", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Doktorlar_Doktorlar_DoktorId",
+                        column: x => x.DoktorId,
+                        principalTable: "Doktorlar",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Doktorlar_Klinikler_KlinikId",
                         column: x => x.KlinikId,
@@ -93,8 +99,8 @@ namespace HastaneAppv4.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    KullaniciAdi = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Sifre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    KullaniciAdi = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Sifre = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RolId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -116,7 +122,8 @@ namespace HastaneAppv4.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     HastaId = table.Column<int>(type: "int", nullable: false),
                     DoktorId = table.Column<int>(type: "int", nullable: false),
-                    Tarih = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Tarih = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Saat = table.Column<TimeSpan>(type: "time", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -160,6 +167,11 @@ namespace HastaneAppv4.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Doktorlar_DoktorId",
+                table: "Doktorlar",
+                column: "DoktorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Doktorlar_KlinikId",

@@ -1,41 +1,57 @@
 ﻿@model HastaneAppv4.Models.Randevu
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Randevu Al";
 }
 
-<h1>Create</h1>
-
-<h4>Randevu</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="HastaId" class="control-label"></label>
-                <select asp-for="HastaId" class ="form-control" asp-items="ViewBag.HastaId"></select>
+<div class="container my-5 d-flex justify-content-center">
+    <div class="card shadow p-4" style="min-width: 400px; max-width: 500px; width: 100%;">
+        <h3 class="mb-4 text-primary text-center">
+            <i class="far fa-calendar-plus me-2"></i> Randevu Al
+        </h3>
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label asp-for="DoktorId" class="form-label">Doktor</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user-md"></i></span>
+                    <select asp-for="DoktorId" class="form-select" asp-items="ViewBag.DoktorId">
+                        <option value="">Doktor seçiniz</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="DoktorId" class="control-label"></label>
-                <select asp-for="DoktorId" class ="form-control" asp-items="ViewBag.DoktorId"></select>
+            <div class="mb-3">
+                <label asp-for="HastaId" class="form-label">Hasta</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <select asp-for="HastaId" class="form-select" asp-items="ViewBag.HastaId">
+                        <option value="">Hasta seçiniz</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Tarih" class="control-label"></label>
-                <input asp-for="Tarih" class="form-control" />
-                <span asp-validation-for="Tarih" class="text-danger"></span>
+            <div class="mb-3">
+                <label asp-for="Tarih" class="form-label">Tarih</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    <input asp-for="Tarih" type="date" class="form-control" />
+                </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="mb-4">
+                <label asp-for="Saat" class="form-label">Saat</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="far fa-clock"></i></span>
+                    <input asp-for="Saat" type="time" class="form-control" />
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">
+                    <i class="far fa-calendar-check me-1"></i> Randevu Al
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">İptal</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 }

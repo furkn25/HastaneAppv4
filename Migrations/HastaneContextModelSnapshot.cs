@@ -4,23 +4,20 @@ using HastaneAppv4.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace HastaneAppv4.Data.Migrations
+namespace HastaneAppv4.Migrations
 {
     [DbContext(typeof(HastaneContext))]
-    [Migration("20250511225752_InitialCreate")]
-    partial class InitialCreate
+    partial class HastaneContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -41,14 +38,18 @@ namespace HastaneAppv4.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DoktorId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("KlinikId")
                         .HasColumnType("int");
 
                     b.Property<string>("Soyad")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DoktorId");
 
                     b.HasIndex("KlinikId");
 
@@ -117,7 +118,7 @@ namespace HastaneAppv4.Data.Migrations
                     b.ToTable("Klinikler");
                 });
 
-            modelBuilder.Entity("HastaneAppv4.Models.Kullanici", b =>
+            modelBuilder.Entity("HastaneAppv4.Models.Kullanicilar", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,14 +127,12 @@ namespace HastaneAppv4.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("KullaniciAdi")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RolId")
                         .HasColumnType("int");
 
                     b.Property<string>("Sifre")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -156,6 +155,9 @@ namespace HastaneAppv4.Data.Migrations
 
                     b.Property<int>("HastaId")
                         .HasColumnType("int");
+
+                    b.Property<TimeSpan?>("Saat")
+                        .HasColumnType("time");
 
                     b.Property<DateTime>("Tarih")
                         .HasColumnType("datetime2");
@@ -211,6 +213,10 @@ namespace HastaneAppv4.Data.Migrations
 
             modelBuilder.Entity("HastaneAppv4.Models.Doktor", b =>
                 {
+                    b.HasOne("HastaneAppv4.Models.Doktor", null)
+                        .WithMany("Doktorlar")
+                        .HasForeignKey("DoktorId");
+
                     b.HasOne("HastaneAppv4.Models.Klinik", "Klinik")
                         .WithMany("Doktorlar")
                         .HasForeignKey("KlinikId");
@@ -218,7 +224,7 @@ namespace HastaneAppv4.Data.Migrations
                     b.Navigation("Klinik");
                 });
 
-            modelBuilder.Entity("HastaneAppv4.Models.Kullanici", b =>
+            modelBuilder.Entity("HastaneAppv4.Models.Kullanicilar", b =>
                 {
                     b.HasOne("HastaneAppv4.Models.Role", "Rol")
                         .WithMany("Kullanicilar")
@@ -257,7 +263,7 @@ namespace HastaneAppv4.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("HastaneAppv4.Models.Randevu", "Randevu")
-                        .WithMany()
+                        .WithMany("RandevuIlaclari")
                         .HasForeignKey("RandevuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -265,6 +271,11 @@ namespace HastaneAppv4.Data.Migrations
                     b.Navigation("Ilac");
 
                     b.Navigation("Randevu");
+                });
+
+            modelBuilder.Entity("HastaneAppv4.Models.Doktor", b =>
+                {
+                    b.Navigation("Doktorlar");
                 });
 
             modelBuilder.Entity("HastaneAppv4.Models.Ilac", b =>
@@ -275,6 +286,11 @@ namespace HastaneAppv4.Data.Migrations
             modelBuilder.Entity("HastaneAppv4.Models.Klinik", b =>
                 {
                     b.Navigation("Doktorlar");
+                });
+
+            modelBuilder.Entity("HastaneAppv4.Models.Randevu", b =>
+                {
+                    b.Navigation("RandevuIlaclari");
                 });
 
             modelBuilder.Entity("HastaneAppv4.Models.Role", b =>

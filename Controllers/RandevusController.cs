@@ -22,6 +22,18 @@ namespace HastaneAppv4.Controllers
         // GET: Randevus
         public async Task<IActionResult> Index()
         {
+            var randevular = await _context.Randevular
+      .Include(r => r.Hasta)
+      .Include(r => r.Doktor)
+      .ToListAsync();
+
+            var doktorlar = await _context.Doktorlar.ToListAsync();
+            ViewBag.Doktorlar = doktorlar;
+
+            return View(randevular);
+
+            ViewBag.Doktorlar = doktorlar;
+            return View(randevular);
             var hastaneContext = _context.Randevular.Include(r => r.Doktor).Include(r => r.Hasta);
             return View(await hastaneContext.ToListAsync());
         }
@@ -47,10 +59,16 @@ namespace HastaneAppv4.Controllers
         }
 
         // GET: Randevus/Create
-        public IActionResult Create()
+        public IActionResult Create(int? doktorId = null)
         {
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id");
-            ViewData["HastaId"] = new SelectList(_context.Hastalar, "Id", "Id");
+            ViewData["DoktorId"] = new SelectList(
+                _context.Doktorlar.Select(d => new { d.Id, AdSoyad = d.Ad + " " + d.Soyad }),
+                "Id", "AdSoyad", doktorId
+            );
+            ViewData["HastaId"] = new SelectList(
+                _context.Hastalar.Select(h => new { h.Id, AdSoyad = h.Ad + " " + h.Soyad }),
+                "Id", "AdSoyad"
+            );
             return View();
         }
 
@@ -59,7 +77,7 @@ namespace HastaneAppv4.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,HastaId,DoktorId,Tarih")] Randevu randevu)
+        public async Task<IActionResult> Create([Bind("Id,HastaId,DoktorId,Tarih,Saat")] Randevu randevu)
         {
             if (ModelState.IsValid)
             {
@@ -67,10 +85,15 @@ namespace HastaneAppv4.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DoktorId"] = new SelectList(_context.Doktorlar, "Id", "Id", randevu.DoktorId);
+            ViewData["DoktorId"] = new SelectList(
+                _context.Doktorlar.Select(d => new { d.Id, AdSoyad = d.Ad + " " + d.Soyad }),
+                "Id", "AdSoyad", randevu.DoktorId
+            );
             ViewData["HastaId"] = new SelectList(_context.Hastalar, "Id", "Id", randevu.HastaId);
+
             return View(randevu);
         }
+
 
         // GET: Randevus/Edit/5
         public async Task<IActionResult> Edit(int? id)
