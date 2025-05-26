@@ -1,36 +1,42 @@
 ﻿@model HastaneAppv4.Models.Hasta
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Hasta Detayları";
 }
 
-<h1>Details</h1>
+<div class="container my-5 d-flex justify-content-center">
+    <div class="card shadow" style="max-width: 600px; width: 100%;">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="fas fa-user-injured me-2 fs-4"></i>
+            <h3 class="mb-0">Hasta Detayları</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-4">
+                <dt class="col-sm-4">Ad:</dt>
+                <dd class="col-sm-8">@Model.Ad</dd>
 
-<div>
-    <h4>Hasta</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ad)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ad)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Soyad)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Soyad)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DogumTarihi)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DogumTarihi)
-        </dd>
-    </dl>
+                <dt class="col-sm-4">Soyad:</dt>
+                <dd class="col-sm-8">@Model.Soyad</dd>
+
+                <dt class="col-sm-4">Doğum Tarihi:</dt>
+                <dd class="col-sm-8">@Model.DogumTarihi.ToString("dd.MM.yyyy")</dd>
+
+                <dt class="col-sm-4">Telefon:</dt>
+               
+            </dl>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                    <i class="fas fa-edit me-1"></i> Düzenle
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Geri
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+}

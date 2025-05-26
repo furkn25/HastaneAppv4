@@ -1,0 +1,22 @@
+﻿
+public class AccountController : Controller
+{
+    [HttpGet]
+    public IActionResult StaffLogin() => View();
+
+    [HttpPost]
+    public async Task<IActionResult> StaffLogin(string kullaniciAdi, string sifre)
+    {
+        // Rol kontrolü yap (Doktor/Admin)
+        var user = await _context.Kullanicilar
+            .Include(k => k.Rol)
+            .FirstOrDefaultAsync(k => k.KullaniciAdi == kullaniciAdi && k.Sifre == sifre);
+
+        if (user?.Rol?.Ad == "Doktor" || user?.Rol?.Ad == "Admin")
+        {
+            HttpContext.Session.SetString("Rol", user.Rol.Ad);
+            return RedirectToAction("Index", "Doktors");
+        }
+        return View("Error");
+    }
+}

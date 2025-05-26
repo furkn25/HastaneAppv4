@@ -1,47 +1,41 @@
 ﻿@model IEnumerable<HastaneAppv4.Models.Hasta>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Hasta Listesi";
 }
 
-<h1>Index</h1>
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">
+        <i class="fas fa-users me-2"></i> Hasta Listesi
+    </h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Ad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Soyad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DogumTarihi)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Soyad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DogumTarihi)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="mb-4">
+        <a asp-action="Create" class="btn btn-primary mb-3">Yeni Hasta Ekle</a>
+    </div>
+
+    <div class="row g-4">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var hasta in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card shadow-sm p-3">
+                        <h5 class="card-title">@hasta.Ad @hasta.Soyad</h5>
+                        <p><strong>Doğum Tarihi:</strong> @hasta.DogumTarihi.ToString("dd.MM.yyyy")</p>
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@hasta.Id" class="btn btn-outline-primary btn-sm">Detay</a>
+                            <a asp-action="Edit" asp-route-id="@hasta.Id" class="btn btn-outline-secondary btn-sm">Düzenle</a>
+                            <form asp-action="Delete" asp-route-id="@hasta.Id" method="post" onsubmit="return confirm('Hasta silinsin mi?');" style="display:inline;">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Sil</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Hasta bulunamadı.</p>
+        }
+    </div>
+</div>

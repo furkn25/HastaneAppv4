@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HastaneAppv4.Data;
 using HastaneAppv4.Models;
+using System.Linq;
 
 namespace HastaneAppv4.Controllers
 {
@@ -22,25 +19,8 @@ namespace HastaneAppv4.Controllers
         // GET: Kliniks
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Klinikler.ToListAsync());
-        }
-
-        // GET: Kliniks/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var klinik = await _context.Klinikler
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (klinik == null)
-            {
-                return NotFound();
-            }
-
-            return View(klinik);
+            var klinikler = await _context.Klinikler.ToListAsync();
+            return View(klinikler);
         }
 
         // GET: Kliniks/Create
@@ -49,15 +29,13 @@ namespace HastaneAppv4.Controllers
             return View();
         }
 
-        // POST: Kliniks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Ad")] Klinik klinik)
+        public async Task<IActionResult> Create(Klinik klinik) // [Bind] kaldırıldı
         {
             if (ModelState.IsValid)
             {
+                klinik.Doktorlar = new List<Doktor>(); // Boş bir liste atayın
                 _context.Add(klinik);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -68,30 +46,20 @@ namespace HastaneAppv4.Controllers
         // GET: Kliniks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var klinik = await _context.Klinikler.FindAsync(id);
-            if (klinik == null)
-            {
-                return NotFound();
-            }
+            if (klinik == null) return NotFound();
+
             return View(klinik);
         }
 
         // POST: Kliniks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Ad")] Klinik klinik)
         {
-            if (id != klinik.Id)
-            {
-                return NotFound();
-            }
+            if (id != klinik.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -102,14 +70,10 @@ namespace HastaneAppv4.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!KlinikExists(klinik.Id))
-                    {
+                    if (!_context.Klinikler.Any(e => e.Id == klinik.Id))
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -119,17 +83,10 @@ namespace HastaneAppv4.Controllers
         // GET: Kliniks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
-            var klinik = await _context.Klinikler
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (klinik == null)
-            {
-                return NotFound();
-            }
+            var klinik = await _context.Klinikler.FirstOrDefaultAsync(m => m.Id == id);
+            if (klinik == null) return NotFound();
 
             return View(klinik);
         }
@@ -143,15 +100,9 @@ namespace HastaneAppv4.Controllers
             if (klinik != null)
             {
                 _context.Klinikler.Remove(klinik);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool KlinikExists(int id)
-        {
-            return _context.Klinikler.Any(e => e.Id == id);
         }
     }
 }

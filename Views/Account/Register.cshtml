@@ -1,0 +1,47 @@
+﻿@model HastaneAppv4.Models.RegisterViewModel
+
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="row shadow rounded-4 overflow-hidden" style="max-width: 900px; width: 100%;">
+        <div class="col-md-6 d-none d-md-flex bg-primary text-white flex-column justify-content-center p-5">
+            <h2 class="fw-bold mb-4">Hastane Randevu Sistemine Hoşgeldiniz!</h2>
+            <p class="mb-4 fs-5">
+                Kolayca kayıt olun ve doktorlarınızla hızlıca randevu alın.
+            </p>
+            <i class="fas fa-hospital fa-6x"></i>
+        </div>
+
+        <div class="col-md-6 bg-white p-5">
+            <h3 class="mb-4 text-center fw-bold">Kayıt Ol</h3>
+
+            <form asp-action="Register" method="post" novalidate>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control form-control-lg" placeholder="E-posta adresinizi girin" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Şifrenizi girin" />
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control form-control-lg" placeholder="Şifrenizi tekrar girin" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">Kayıt Ol</button>
+            </form>
+
+            <div class="text-center mt-4">
+                Zaten hesabınız var mı? <a asp-controller="Account" asp-action="Login" class="text-primary fw-semibold">Giriş Yap</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,34 +1,69 @@
 ﻿@model HastaneAppv4.Models.Klinik
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Klinik Düzenle";
 }
 
-<h1>Edit</h1>
+<div class="container-fluid py-4">
+    <div class="card shadow-sm rounded-3">
+        <div class="card-header bg-white border-bottom">
+            <h4 class="mb-0">
+                <i class="fas fa-edit me-2 text-warning"></i>Klinik Düzenle
+            </h4>
+        </div>
 
-<h4>Klinik</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Ad" class="control-label"></label>
-                <input asp-for="Ad" class="form-control" />
-                <span asp-validation-for="Ad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Ad" class="form-label">Klinik Adı</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-hospital"></i></span>
+                                <input asp-for="Ad" class="form-control" placeholder="Klinik adını giriniz" />
+                            </div>
+                            <span asp-validation-for="Ad" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Bilgilendirme</h6>
+                                <p class="card-text small text-muted">
+                                    Klinik adını güncellerken dikkatli olunuz. Değişiklikler tüm doktorları etkileyebilir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-warning me-2">
+                        <i class="fas fa-save me-1"></i>Kaydet
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <!-- Değişiklik burada -->
+                        <i class="fas fa-times me-1"></i>İptal
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Form gönderiminde yükleniyor animasyonu
+        document.querySelector('form').addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Kaydediliyor...';
+            submitBtn.disabled = true;
+        });
+    </script>
 }

@@ -1,35 +1,137 @@
 ﻿@model IEnumerable<HastaneAppv4.Models.Klinik>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "HASTANE RANDEVU - Klinik Listesi";
 }
 
-<h1>Index</h1>
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-3">
+                <!-- Başlık Kısmı -->
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-primary fw-bold">
+                                <i class="fas fa-hospital me-2"></i>HASTANE RANDEVU
+                            </h4>
+                            <nav aria-label="breadcrumb" class="d-inline-block mt-1">
+                                <ol class="breadcrumb bg-transparent p-0 small">
+                                    <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+                                    <li class="breadcrumb-item active">Klinik Listesi</li>
+                                </ol>
+                            </nav>
+                        </div>
+                        <a asp-action="Create" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-1"></i>Yeni Klinik Ekle
+                        </a>
+                    </div>
+                </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Ad)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ad)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+                <!-- Klinik Listesi -->
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4 text-uppercase fw-bold text-muted small">KLİNİK ADI</th>
+                                    <th class="text-end pe-4 text-uppercase fw-bold text-muted small">DOKTOR SAYISI</th>
+                                    <th class="text-end pe-4" style="width: 120px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="ps-4">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="icon-shape bg-primary bg-opacity-10 text-primary rounded-2 me-3">
+                                                        <i class="fas fa-clinic-medical"></i>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-0 fw-bold">@item.Ad</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <span class="badge bg-primary bg-opacity-10 text-primary py-2 px-3">
+                                                    @(item.Doktorlar?.Count ?? 0) Doktor
+                                                </span>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-secondary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </a>
+                                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                                        <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Bu kliniği silmek istediğinize emin misiniz?');">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center py-4">
+                                            <i class="fas fa-clinic-medical fa-2x text-muted mb-3"></i>
+                                            <h6 class="text-muted">Kayıtlı klinik bulunamadı</h6>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer bg-white border-top py-3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-0 text-muted small">
+                                Toplam <strong>@Model?.Count()</strong> klinik listeleniyor
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .icon-shape {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+        }
+
+        .table th {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+    </style>
 }
-    </tbody>
-</table>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+}

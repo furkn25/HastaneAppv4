@@ -1,24 +1,128 @@
 ﻿@model HastaneAppv4.Models.Klinik
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Klinik Detayları";
 }
 
-<h1>Details</h1>
+<div class="container-fluid py-4">
+    <div class="card shadow-sm rounded-3">
+        <div class="card-header bg-white border-bottom">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Klinik Detayları
+                </h4>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-warning me-2">
+                        <i class="fas fa-edit me-1"></i>Düzenle
+                    </a>
+                    <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Listeye Dön
+                    </a>
+                </div>
+            </div>
+        </div>
 
-<div>
-    <h4>Klinik</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Ad)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Ad)
-        </dd>
-    </dl>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <dl class="row">
+                        <dt class="col-sm-4 text-muted">Klinik ID</dt>
+                        <dd class="col-sm-8">@Model.Id</dd>
+
+                        <dt class="col-sm-4 text-muted">Klinik Adı</dt>
+                        <dd class="col-sm-8">
+                            <span class="fw-bold">@Model.Ad</span>
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Doktor Sayısı</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-primary">@(Model.Doktorlar?.Count ?? 0)</span>
+                            <a href="#doktorlar" class="btn btn-sm btn-link ms-2">
+                                <i class="fas fa-list"></i> Doktorları Görüntüle
+                            </a>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-light h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-hospital fa-4x text-primary mb-3"></i>
+                            <h5 class="card-title">@Model.Ad</h5>
+                            <p class="card-text small text-muted mt-2">
+                                Son Güncelleme: @DateTime.Now.ToString("dd.MM.yyyy HH:mm")
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doktorlar Listesi (Yeni Eklenen Kısım) -->
+            <div class="mt-4" id="doktorlar">
+                <h5 class="mb-3">
+                    <i class="fas fa-user-md me-2"></i>Bu Klinikteki Doktorlar
+                </h5>
+                @if (Model.Doktorlar?.Any() == true)
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Doktor Adı</th>
+                                    <th>Uzmanlık</th>
+                                    <th>İletişim</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var doktor in Model.Doktorlar)
+                                {
+                                    <tr>
+                                        <td>@doktor.AdSoyad</td>
+                                    
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle me-2"></i>Bu klinikte kayıtlı doktor bulunmamaktadır.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card-footer bg-white border-top">
+            <div class="d-flex justify-content-between">
+                <a asp-action="Create" asp-controller="Doktors" asp-route-klinikId="@Model.Id"
+                   class="btn btn-success btn-sm">
+                    <i class="fas fa-user-plus me-1"></i>Yeni Doktor Ekle
+                </a>
+                <div>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm me-2">
+                        <i class="fas fa-edit me-1"></i>Düzenle
+                    </a>
+                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Bu kliniği ve bağlı doktorları silmek istediğinize emin misiniz?');">
+                            <i class="fas fa-trash-alt me-1"></i>Sil
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts {
+    <script>
+        // Doktor listesi için smooth scroll
+        document.querySelector('a[href="#doktorlar"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#doktorlar').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    </script>
+}
